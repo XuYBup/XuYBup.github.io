@@ -16,25 +16,22 @@
   <meta name="author" content="xuyb">
   <meta name="keywords" content="">
   
-    <meta name="description" content="静态路由联动bfd-echo解决路由ecmp问题案例总结分析">
+    <meta name="description" content="关于GRE隧道技术的学习总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="静态路由联动bfd-echo解决路由ecmp问题">
-<meta property="og:url" content="http://example.com/2024/02/11/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd-echo%E8%A7%A3%E5%86%B3%E8%B7%AF%E7%94%B1ecmp%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:title" content="GRE">
+<meta property="og:url" content="http://example.com/2024/02/11/GRE/index.html">
 <meta property="og:site_name" content="xuyb&#39;s Blog">
-<meta property="og:description" content="静态路由联动bfd-echo解决路由ecmp问题案例总结分析">
+<meta property="og:description" content="关于GRE隧道技术的学习总结">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2024/02/11/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd-echo%E8%A7%A3%E5%86%B3%E8%B7%AF%E7%94%B1ecmp%E9%97%AE%E9%A2%98/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd.png">
-<meta property="article:published_time" content="2024-02-11T03:20:48.000Z">
-<meta property="article:modified_time" content="2024-02-11T10:55:23.005Z">
+<meta property="article:published_time" content="2024-02-11T11:40:32.000Z">
+<meta property="article:modified_time" content="2024-02-11T11:54:31.054Z">
 <meta property="article:author" content="xuyb">
 <meta property="article:tag" content="Network">
-<meta property="article:tag" content="案例">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2024/02/11/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd-echo%E8%A7%A3%E5%86%B3%E8%B7%AF%E7%94%B1ecmp%E9%97%AE%E9%A2%98/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd.png">
   
   
   
-  <title>静态路由联动bfd-echo解决路由ecmp问题 - xuyb&#39;s Blog</title>
+  <title>GRE - xuyb&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="静态路由联动bfd-echo解决路由ecmp问题"></span>
+            <span id="subtitle" data-typed-text="GRE"></span>
           
         </div>
 
@@ -211,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-02-11 11:20" pubdate>
-          2024年2月11日 上午
+        <time datetime="2024-02-11 19:40" pubdate>
+          2024年2月11日 晚上
         </time>
       </span>
     
@@ -223,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          228 字
+          373 字
         
       </span>
     
@@ -234,7 +231,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -271,38 +268,24 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">静态路由联动bfd-echo解决路由ecmp问题</h1>
+            <h1 id="seo-header">GRE</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
-<li>DSW上联CSW，现有架构口子型上联，因业务流量增长，需进行上联扩容</li>
-<li>网络拓扑<img src="/2024/02/11/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd-echo%E8%A7%A3%E5%86%B3%E8%B7%AF%E7%94%B1ecmp%E9%97%AE%E9%A2%98/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd.png" srcset="/img/loading.gif" lazyload class="" title="拓扑"></li>
-<li>路由介绍<ul>
-<li>ASW–DSW通过EBGP三层对接，DSW学习到的EBGP路由做PBR&#x2F;路由策略重定向下一跳地址到CSW</li>
-<li>DSW–CSW静态路由三层对接</li>
+                <h3 id="什么是GRE"><a href="#什么是GRE" class="headerlink" title="什么是GRE?"></a>什么是GRE?</h3><ul>
+<li>通用路由封装（GRE：Genetic Routing Encapsulation）是一种隧道技术，也是实现VPN的一种方式，它规定了如何将一种网络协议下的数据报文封装在另外一种网络协议中，使这些被封装的数据包能够在另一个网络层协议中传输</li>
+<li>GRE提供了将一种协议的报文封装在另一种协议报文中的机制，使报文能够在异种网络中传输，而异种报文传输的通道称为Tunnel</li>
 </ul>
-</li>
+<h3 id="为什么需要GRE封装？"><a href="#为什么需要GRE封装？" class="headerlink" title="为什么需要GRE封装？"></a>为什么需要GRE封装？</h3><ul>
+<li>骨干网中一般采用单一网络协议（例如IPv4）进行数据报文传输，但是不同的非骨干网上可能会使用不同网络协议（例如：IPv6等）进行数据报文传输。由于骨干网与非骨干网使用的协议不同，这样将导致非骨干网之间无法通过骨干网传输数据报文。GRE协议通过实现一种协议封装另一种协议来解决这个问题</li>
 </ul>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
-<li>新增扩容线路后，路由不会ECMP，做PBR&#x2F;路由策略重定向下一跳地址到CSW这部分路由只会跑原有线路</li>
+<h3 id="GRE是如何工作的"><a href="#GRE是如何工作的" class="headerlink" title="GRE是如何工作的"></a>GRE是如何工作的</h3><ul>
+<li>系统收到需要进行封装和路由的某网络层协议数据时，将首先对其加上GRE报文头，使之成为GRE报文，再将其封装在另一协议（如IP）中。这样，此报文的转发就可以完全由IP协议负责</li>
 </ul>
-<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><ul>
-<li>PBR&#x2F;路由策略不能直接定向2个下一跳地址</li>
-</ul>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
-<li>可通过配置静态路由联动bfd echo解决<ul>
-<li>新增扩容线路三层、bfd对接</li>
-<li>新增一个重定向地址，写2条目的地址指向重定向IP的静态路由联动bfd echo</li>
-</ul>
-</li>
-<li>具体命令实施<ul>
-<li>bfd echo 配置 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">bfd <span class="hljs-number">1</span> bind peer-ip X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span> interface X source-ip X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span> one-arm-echo<br>discriminator local <span class="hljs-number">1</span><br>bfd <span class="hljs-number">2</span> bind peer-ip X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span> interface X source-ip X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span> one-arm-echo<br>discriminator local <span class="hljs-number">2</span><br></code></pre></td></tr></table></figure></li>
-<li>静态路由配置 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">ip route-static X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span>.X（重定向IP） <span class="hljs-number">255.255</span>.<span class="hljs-number">255.255</span> 下一跳端口 X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span>  track bfd-session <span class="hljs-number">1</span>  description To_CSW_1<br>ip route-static X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span>.X（重定向IP） <span class="hljs-number">255.255</span>.<span class="hljs-number">255.255</span> 下一跳端口 X<span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span><span class="hljs-selector-class">.X</span>  track bfd-session <span class="hljs-number">2</span>  description To_CSW_2<br></code></pre></td></tr></table></figure></li>
-<li>PBR&#x2F;路由策略重定向下一跳地址 <figure class="highlight tp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs tp">route-policy <span class="hljs-keyword">X</span> permit node <span class="hljs-number">500</span><br>  apply ip-address next-hop <span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>（重定向IP）<br><br>traffic behavior <span class="hljs-keyword">X</span><br>  redirect nexthop <span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>（重定向IP）<br></code></pre></td></tr></table></figure></li>
-</ul>
-</li>
+<h3 id="GRE隧道的应用"><a href="#GRE隧道的应用" class="headerlink" title="GRE隧道的应用"></a>GRE隧道的应用</h3><ul>
+<li>将不连续的子网连接起来，实现跨越广域网的VPN</li>
+<li>IDC边缘节点通过公网IP建立GRE隧道进行管理</li>
 </ul>
 
                 
@@ -322,7 +305,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" class="category-chain-item">网络运维</a>
+  <a href="/categories/%E7%BD%91%E7%BB%9C%E6%8A%80%E6%9C%AF/" class="category-chain-item">网络技术</a>
   
   
 
@@ -339,8 +322,6 @@
       
         <a href="/tags/Network/" class="print-no-link">#Network</a>
       
-        <a href="/tags/%E6%A1%88%E4%BE%8B/" class="print-no-link">#案例</a>
-      
     </div>
   
 </div>
@@ -351,8 +332,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>静态路由联动bfd-echo解决路由ecmp问题</div>
-      <div>http://example.com/2024/02/11/静态路由联动bfd-echo解决路由ecmp问题/</div>
+      <div>GRE</div>
+      <div>http://example.com/2024/02/11/GRE/</div>
     </div>
     <div class="license-meta">
       
@@ -396,18 +377,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/02/11/GRE/" title="GRE">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">GRE</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/09/%E5%B8%B8%E7%94%A8%E8%AF%8A%E6%96%AD%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB/" title="常用诊断命令汇总">
-                        <span class="hidden-mobile">常用诊断命令汇总</span>
+                      <a href="/2024/02/11/%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E8%81%94%E5%8A%A8bfd-echo%E8%A7%A3%E5%86%B3%E8%B7%AF%E7%94%B1ecmp%E9%97%AE%E9%A2%98/" title="静态路由联动bfd-echo解决路由ecmp问题">
+                        <span class="hidden-mobile">静态路由联动bfd-echo解决路由ecmp问题</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
