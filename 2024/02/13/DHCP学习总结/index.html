@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/1.png">
 <meta property="og:image" content="http://example.com/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/2.png">
 <meta property="article:published_time" content="2024-02-13T12:17:36.000Z">
-<meta property="article:modified_time" content="2024-02-14T12:06:00.651Z">
+<meta property="article:modified_time" content="2024-02-14T12:08:04.900Z">
 <meta property="article:author" content="xuyb">
 <meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary_large_image">
@@ -250,7 +250,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k 字
+          2.1k 字
         
       </span>
     
@@ -261,7 +261,7 @@
         
         
         
-          17 分钟
+          18 分钟
         
       </span>
     
@@ -374,6 +374,9 @@
 <h5 id="防止DHCP-Server服务拒绝攻击（饿死攻击）"><a href="#防止DHCP-Server服务拒绝攻击（饿死攻击）" class="headerlink" title="防止DHCP Server服务拒绝攻击（饿死攻击）"></a>防止DHCP Server服务拒绝攻击（饿死攻击）</h5><ul>
 <li>攻击原理：DHCP Server是根据DHCP报文中的CHADDR（Client Hardware Address）字段来识别确认不同的客户端，如果攻击者持续发送Request报文不断修改CHADDR字段申请IP地址，将会导致DHCP Server的地址池被耗尽，从而导致无法为正常用户提供IP地址</li>
 <li>解决方案：DHCP Snooping技术支持在端口下对DHCP Request报文的源MAC地址与CHADDR进行一致性检查：如果二者相同，则转发报文；如果二者不相同，则丢弃。如果要在某端口下实施源MAC地址与CHADDR的一致性检查，可以在该端口下使用命令dhcp snooping check dhcp-chaddr enable</li>
+</ul>
+<h3 id="DHCP-Snooping应用"><a href="#DHCP-Snooping应用" class="headerlink" title="DHCP Snooping应用"></a>DHCP Snooping应用</h3><ul>
+<li>DHCP可以动态的为DHCP客户端分配IP地址，但是在DHCP动态分配IP过程中存在安全隐患（如仿冒者攻击、DoS攻击等）。为了保证客户端能从合法的服务器获取IP地址，可以部署DHCP Snooping功能。DHCP Snooping功能可以部署在二层组网和三层组网上。DHCP Snooping部署在三层网络上时，需要依赖DHCP Relay功能。</li>
 </ul>
 
                 
