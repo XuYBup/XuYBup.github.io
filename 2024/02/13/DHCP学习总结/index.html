@@ -16,23 +16,25 @@
   <meta name="author" content="xuyb">
   <meta name="keywords" content="">
   
-    <meta name="description" content="H3C交换机lacp协商异常案例分析及解决方案">
+    <meta name="description" content="小白关于DHCP的学习总结~ 欢迎讨论交流~">
 <meta property="og:type" content="article">
-<meta property="og:title" content="交换机lacp协商异常问题">
-<meta property="og:url" content="http://example.com/2024/02/13/lacp%E5%8D%8F%E5%95%86%E5%BC%82%E5%B8%B8/index.html">
+<meta property="og:title" content="DHCP学习总结">
+<meta property="og:url" content="http://example.com/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="xuyb&#39;s Blog">
-<meta property="og:description" content="H3C交换机lacp协商异常案例分析及解决方案">
+<meta property="og:description" content="小白关于DHCP的学习总结~ 欢迎讨论交流~">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-02-13T11:29:00.000Z">
-<meta property="article:modified_time" content="2024-02-13T12:09:14.085Z">
+<meta property="og:image" content="http://example.com/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/1.png">
+<meta property="og:image" content="http://example.com/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/2.png">
+<meta property="article:published_time" content="2024-02-13T12:17:36.000Z">
+<meta property="article:modified_time" content="2024-02-14T12:06:00.651Z">
 <meta property="article:author" content="xuyb">
 <meta property="article:tag" content="Network">
-<meta property="article:tag" content="案例">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/1.png">
   
   
   
-  <title>交换机lacp协商异常问题 - xuyb&#39;s Blog</title>
+  <title>DHCP学习总结 - xuyb&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -225,7 +227,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="交换机lacp协商异常问题"></span>
+            <span id="subtitle" data-typed-text="DHCP学习总结"></span>
           
         </div>
 
@@ -236,7 +238,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-02-13 19:29" pubdate>
+        <time datetime="2024-02-13 20:17" pubdate>
           2024年2月13日 晚上
         </time>
       </span>
@@ -248,7 +250,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          442 字
+          2k 字
         
       </span>
     
@@ -259,7 +261,7 @@
         
         
         
-          4 分钟
+          17 分钟
         
       </span>
     
@@ -296,31 +298,82 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">交换机lacp协商异常问题</h1>
+            <h1 id="seo-header">DHCP学习总结</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
-<li>进行常规ASW–CSW上联扩容，由80G扩容至160G</li>
+                <h3 id="什么是DHCP？"><a href="#什么是DHCP？" class="headerlink" title="什么是DHCP？"></a>什么是DHCP？</h3><ul>
+<li>动态主机配置协议DHCP（Dynamic Host Configuration Protocol）是一种网络管理协议，用于集中对用户IP地址进行动态管理和配置.</li>
+<li>采用客户端&#x2F;服务器通信模式，由客户端（DHCP Client）向服务器（DHCP Server）提出配置申请，DHCP Server为网络上的每个设备动态分配IP地址、子网掩码、默认网关地址，域名服务器（DNS）地址和其他相关配置参数，以便可以与其他IP网络通信.</li>
 </ul>
-<h3 id="异常现象"><a href="#异常现象" class="headerlink" title="异常现象"></a>异常现象</h3><ul>
-<li><p>扩容第二个物理端口时，拨测该ASW下，部分IP地址有20个丢包</p>
+<h3 id="为什么要使用DHCP？"><a href="#为什么要使用DHCP？" class="headerlink" title="为什么要使用DHCP？"></a>为什么要使用DHCP？</h3><ul>
+<li>准确的IP配置</li>
+<li>减少IP地址冲突</li>
+<li>IP地址管理的自动化</li>
+<li>高效的变更管理</li>
+</ul>
+<h3 id="DHCP是怎么工作的？"><a href="#DHCP是怎么工作的？" class="headerlink" title="DHCP是怎么工作的？"></a>DHCP是怎么工作的？</h3><ul>
+<li><p>DHCP协议采用UDP作为传输协议，DHCP客户端发送请求消息到DHCP服务器的68号端口，DHCP服务器回应应答消息给DHCP客户端的67号端口.</p>
 </li>
-<li><p>扩容第一个端口F1&#x2F;0&#x2F;50时，探测正常，ASW侧开启端口后延迟了30s后加入聚合组，CSW侧同样延迟了30s后加入</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs pf">ASW:<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">44</span>:<span class="hljs-number">13</span>:<span class="hljs-number">666</span>  IFNET/<span class="hljs-number">5</span>/LINK UPDOWN: Line protocol <span class="hljs-keyword">on</span> the interface FortyGigE1/<span class="hljs-number">0</span>/<span class="hljs-number">50</span> is up.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">44</span>:<span class="hljs-number">13</span>:<span class="hljs-number">638</span> LAGG/<span class="hljs-number">6</span>/LAGG ACTIVE: Member <span class="hljs-keyword">port</span> FGE1/<span class="hljs-number">0</span>/<span class="hljs-number">50</span> of aggregation <span class="hljs-keyword">group</span> BAGG1 changed <span class="hljs-keyword">to</span> the active <span class="hljs-keyword">state</span>.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">43</span>:<span class="hljs-number">43</span>:<span class="hljs-number">505</span>  IFNET/<span class="hljs-number">3</span>/PHY UPDOWN: FortyGigE1/<span class="hljs-number">0</span>/<span class="hljs-number">50</span> link status is up.<br><br><br>CSW:<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">44</span>:<span class="hljs-number">13</span>:<span class="hljs-number">888</span>  IFNET/<span class="hljs-number">5</span>/LINK_UPDOWN: Line protocol <span class="hljs-keyword">state</span> <span class="hljs-keyword">on</span> the interface FortyGigE1/<span class="hljs-number">2</span>/<span class="hljs-number">0</span>/<span class="hljs-number">31</span> changed <span class="hljs-keyword">to</span> up.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">44</span>:<span class="hljs-number">13</span>:<span class="hljs-number">653</span>  LAGG/<span class="hljs-number">6</span>/LAGG ACTIVE: Member <span class="hljs-keyword">port</span> FGE1/<span class="hljs-number">2</span>/<span class="hljs-number">0</span>/<span class="hljs-number">31</span> of aggregation <span class="hljs-keyword">group</span>BAGG129 changed <span class="hljs-keyword">to</span> the actiLve <span class="hljs-keyword">state</span>.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">43</span>:<span class="hljs-number">42</span>:<span class="hljs-number">143</span>  IFNET/<span class="hljs-number">3</span>/PHY_UPDOWN: Physical <span class="hljs-keyword">state</span> <span class="hljs-keyword">on</span> the interfaceFortyGigE1/<span class="hljs-number">2</span>/<span class="hljs-number">0</span>/<span class="hljs-number">31</span> changed <span class="hljs-keyword">to</span> up. <br></code></pre></td></tr></table></figure>
+<li><p>只有跟DHCP客户端在同一个网段的DHCP服务器才能收到DHCP客户端广播的DHCP DISCOVER报文。当DHCP客户端与DHCP服务器不在同一个网段时，必须部署DHCP中继来转发DHCP客户端和DHCP服务器之间的DHCP报文。在DHCP客户端看来，DHCP中继就像DHCP服务器；在DHCP服务器看来，DHCP中继就像DHCP客户端</p>
 </li>
-<li><p>扩容第二个端口F2&#x2F;0&#x2F;50时，探测部分IP有丢包，ASW侧开启端口后延迟了30s后加入聚合组，CSW侧直接加入聚合组，此时部分IP出现丢包；</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs pf">ASW：<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">46</span>:<span class="hljs-number">57</span>:<span class="hljs-number">624</span>  IFNET/<span class="hljs-number">5</span>/LINK UPDOWN: Line protocol <span class="hljs-keyword">on</span> the interface fortyGig2/<span class="hljs-number">0</span>/<span class="hljs-number">50</span> is up.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">46</span>:<span class="hljs-number">57</span>:<span class="hljs-number">584</span>  LAGG/<span class="hljs-number">6</span>/LAG ACTIvE: Member <span class="hljs-keyword">port</span> FGE2/<span class="hljs-number">0</span>/<span class="hljs-number">50</span> of aggregation <span class="hljs-keyword">group</span> BAGG1 changed <span class="hljs-keyword">to</span> the active <span class="hljs-keyword">state</span>.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">46</span>:<span class="hljs-number">27</span>:<span class="hljs-number">471</span>  IFNET/<span class="hljs-number">3</span>/PHY UPDOWN: FortyGigE2/<span class="hljs-number">0</span>/<span class="hljs-number">50</span> link status is up.<br><br><br>CSW: <br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">46</span>:<span class="hljs-number">27</span>:<span class="hljs-number">736</span>  IFNET/<span class="hljs-number">5</span>/LINK UPDOWN: Line protocol <span class="hljs-keyword">on</span> the interface fortyGig2/<span class="hljs-number">2</span>/<span class="hljs-number">0</span>/<span class="hljs-number">31</span> changed <span class="hljs-keyword">to</span> up.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">46</span>:<span class="hljs-number">27</span>:<span class="hljs-number">609</span>  LAGG/<span class="hljs-number">6</span>/LAGG ACTIVE:Member <span class="hljs-keyword">port</span> FGE2/<span class="hljs-number">2</span>/<span class="hljs-number">0</span>/<span class="hljs-number">31</span> of aggregation <span class="hljs-keyword">group</span> BAGG129 changed <span class="hljs-keyword">to</span> the active <span class="hljs-keyword">state</span>.<br><br>%Jul <span class="hljs-number">18</span> <span class="hljs-number">16</span>:<span class="hljs-number">46</span>:<span class="hljs-number">26</span>:<span class="hljs-number">327</span>  IFNET/<span class="hljs-number">3</span>/PHY_UPDOWN: Physical <span class="hljs-keyword">state</span> <span class="hljs-keyword">on</span> the interface FortyGigE2/<span class="hljs-number">2</span>/<span class="hljs-number">0</span>/<span class="hljs-number">31</span> changed <span class="hljs-keyword">to</span> up.<br></code></pre></td></tr></table></figure></li>
+<li><p>DHCP交互过程如下</p>
+<img src="/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/1.png" srcset="/img/loading.gif" lazyload class="" title="DHCP交互过程">
+</li>
+<li><p>发现阶段，即DHCP客户端寻找DHCP服务器的阶段。客户端以广播方式发送DHCP-DISCOVER报文（目的IP地址为255.255.255.255）</p>
+</li>
+<li><p>提供阶段，即DHCP服务器提供IP地址的阶段。DHCP服务器接收到客户端的DHCP-DISCOVER报文后，根据IP地址分配的优先次序选出一个IP地址，与其他参数一起通过DHCP-OFFER报文发送给客户端.</p>
+</li>
+<li><p>选择阶段，即DHCP客户端选择IP地址的阶段。如果有多台DHCP服务器向该客户端发来DHCP-OFFER报文，客户端只接受第一个收到的DHCP-OFFER报文，然后以广播方式发送DHCP-REQUEST报文，该报文中包含DHCP服务器在DHCP-OFFER报文中分配的IP地址.</p>
+</li>
+<li><p>确认阶段，即DHCP服务器确认IP地址的阶段。DHCP服务器收到DHCP客户端发来的DHCP-REQUEST报文后，只有DHCP客户端选择的服务器会进行如下操作：如果确认将地址分配给该客户端，则返回DHCP-ACK报文；否则返回DHCP-NAK报文，表明地址不能分配给该客户端.</p>
+</li>
 </ul>
-<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><ul>
-<li>经排查，网工操作步骤正常，初步怀疑H3C交换机侧lacp协商问题</li>
-<li>成员端口起来后加入聚合组时，lacp交互立即发包、且需要交互完整的协商过程。由于设备当前版本存在lacp模块处理报文限速保护（200ms3个报文），正常情况下两端设备都不存在限速保护则几秒即可协商成功</li>
-<li>在扩容第一个接口时，由于触发了6300的限速保护机制，使6300丢弃协商报文，lacp中间协商过程没有完成，导致两端接口需等待一个长超时时间30s后继续协商（设备默认是长超时，30秒发一次lacp报文），所以第一次扩容接口有30秒延迟时间</li>
-<li>第二次扩容接口时，同样也触发了6300的限速保护机制，但丢弃了最后一个协商报文，则125侧认为协商已经完成，但6300侧没有完成整个协商过程，导致125侧接口up，6300侧接口down，从而导致丢包。等待一个长超时时间30s后继续协商，所以30秒后6300侧接口up</li>
+<hr>
+<h3 id="什么是DHCP中继？"><a href="#什么是DHCP中继？" class="headerlink" title="什么是DHCP中继？"></a>什么是DHCP中继？</h3><ul>
+<li>DHCP中继用于在DHCP服务器和客户端之间转发DHCP报文。当DHCP服务器与客户端不在同一个网段时，需要配置DHCP中继。对于DHCP客户端来说，DHCP中继就是DHCP服务器；对于DHCP服务器来说，DHCP中继就是DHCP客户端.</li>
 </ul>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
-<li>可以通过修改成员接口为lacp短超时规避，1秒发送一次lacp报文；设备缺省为lacp长超时模式.<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">interface</span>  <span class="hljs-symbol">X</span><br> <span class="hljs-symbol">lacp</span> <span class="hljs-symbol">period</span> <span class="hljs-symbol">short</span><br></code></pre></td></tr></table></figure></li>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><ul>
+<li>DHCP中继适用于用户网关设备众多且分布零散的大型网络。为减少维护工作量，网络管理员不想在每个汇聚层交换机（用户网关）上都配置DHCP服务器功能，而希望在核心层设备上配置DHCP服务器功能或在服务器区域部署一台专门的DHCP服务器。此时，作为用户网关的汇聚层交换机上就需要配置DHCP中继功能，实现DHCP服务器与客户端之间的DHCP报文交互</li>
+</ul>
+<h3 id="DHCP中继是怎么工作的？"><a href="#DHCP中继是怎么工作的？" class="headerlink" title="DHCP中继是怎么工作的？"></a>DHCP中继是怎么工作的？</h3><ul>
+<li>DHCP中继交互过程如下<img src="/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/2.png" srcset="/img/loading.gif" lazyload class="" title="DHCP中继交互过程"></li>
+</ul>
+<hr>
+<h3 id="什么是DHCP-Snooping？"><a href="#什么是DHCP-Snooping？" class="headerlink" title="什么是DHCP Snooping？"></a>什么是DHCP Snooping？</h3><ul>
+<li>DHCP Snooping是DHCP的一种安全特性，用于保证DHCP客户端从合法的DHCP服务器获取IP地址，并记录DHCP客户端IP地址与MAC地址等参数的对应关系，防止网络上针对DHCP攻击</li>
+<li>DHCP Snooping技术，在DHCP Client和DHCP Server之间建立一道防火墙，以抵御网络中针对DHCP的各种攻击.</li>
+</ul>
+<h3 id="DHCP-Snooping功能"><a href="#DHCP-Snooping功能" class="headerlink" title="DHCP Snooping功能"></a>DHCP Snooping功能</h3><ul>
+<li><p>DHCP Snooping允许将某个物理端口设置为信任端口或不信任端口，一般把与合法DHCP服务器连接的接口设置为信任（Trusted）接口，其它接口都设为不信任（Untrusted）接口。当使能了DHCP Snooping时，所有接口都默认为不信任接口</p>
+</li>
+<li><p>信任功能</p>
+<ul>
+<li>非信任接口：收到DHCP请求报文后，转发给所有的信任端口；收到DHCP响应报文则丢弃</li>
+<li>信任接口：收到DHCP请求报文之后，转发给所有的信任接口，如果没有其他信任接口，则丢弃请求报文；收到DHCP响应报文后，只转发给连接客户端的非信任接口</li>
+</ul>
+</li>
+<li><p>基本监听功能：启用了DHCP Snooping的设备会监听DHCP服务器发送过来的ACK报文，在设备上生成DHCP Snooping绑定表信息，绑定表项包括客户端的MAC地址、获取的IP地址、与DHCP客户端相连的端口，以及端口所属的VLAN等信息</p>
+</li>
+<li><p>基于DHCP Snooping表可以实现两个安全功能：IP Source Guard（IP源防护）；Dynamic ARP Inspection（动态ARP监测）</p>
+</li>
+</ul>
+<h3 id="DHCP面临的安全威胁"><a href="#DHCP面临的安全威胁" class="headerlink" title="DHCP面临的安全威胁"></a>DHCP面临的安全威胁</h3><h5 id="防止DHCP报文泛洪攻击"><a href="#防止DHCP报文泛洪攻击" class="headerlink" title="防止DHCP报文泛洪攻击"></a>防止DHCP报文泛洪攻击</h5><ul>
+<li>攻击原理：在DHCP网络环境中，若攻击者短时间内向设备发送大量的DHCP报文，将会对设备的性能造成巨大的冲击以致可能会导致设备无法正常工作</li>
+<li>解决方案：为了防止DHCP报文泛洪攻击，可以在开启DHCP Snooping的设备上，配置DHCP报文上送到DHCP协议栈的速率限制，当上传到DHCP协议栈的速率超过配置的阈值，则设备会将超过规定速率的报文丢弃，并且可以针对丢弃的报文设置一个阈值，当丢弃的报文达到告警阈值，设备将向网管产生告警<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs smali">dhcp snooping<span class="hljs-built_in"> check </span>dhcp-rate enable  //开启DHCP报文上传到DHCP协议栈的限速功能<br>dhcp snooping<span class="hljs-built_in"> check </span>dhcp-rate 100  //配置DHCP报文上传到协议栈的最大速率。默认为100pps，即每秒处理100个DHCP报文，超出100将会被丢弃<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="防止仿冒DHCP报文攻击"><a href="#防止仿冒DHCP报文攻击" class="headerlink" title="防止仿冒DHCP报文攻击"></a>防止仿冒DHCP报文攻击</h5><ul>
+<li>攻击原理：如果攻击者冒充合法用户不断向DHCP Server发送DHCP Request报文续租IP地址，将会导致地址无法正常回收，导致合法用户不能获得IP地址；或者攻击者仿冒DHCP合法用户发送DHCP Releasr报文，将会导致合法用户异常下线</li>
+<li>解决方案：可以利用DHCP Snooping 绑定表的功能，对DHCP Request和DHCP Release报文进行匹配检查，只有匹配成功的报文，设备才会转发，否则将会丢弃<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs smali">dhcp snooping<span class="hljs-built_in"> check </span>dhcp-request enable //配置设备收到DHCP-Request报文，进行绑定检查功能<br><br>dhcp snooping alarm dhcp-request enable //配置设备因为dhcp-request导致丢弃dhcp报文的告警功能<br><br>dhcp snooping alarm dhcp-request threshold 100 //配置设备因为dhcp-request而丢弃dhcp报文的告警阈值，当丢包达到100个时产生日志告警<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="防止非DHCP用户攻击"><a href="#防止非DHCP用户攻击" class="headerlink" title="防止非DHCP用户攻击"></a>防止非DHCP用户攻击</h5><ul>
+<li>攻击原理：如果有用户是静态配置的IP地址，那么这个用户就是非DHCP用户，对于DHCP Snooping来说是监听DHCP Server的ACK报文形成绑定表信息的，如果用户是静态配置的IP地<br>址那么设备上将不会有关于此用户的绑定表，绑定表能够实现的安全防范将针对此用户无效，这时候非DHCP用户就有可能发送虚假的DHCP Request或者DHCP Release报文攻击网络</li>
+<li>解决方案：为了防止这种攻击，可以开启设备根据DHCP Snooping绑定表生成接口MAC地址表项的功能，设备开启之后同时也会关闭接口动态学习MAC地址表项的能力。如果此时非法用户发送攻击报文，由于设备并不存在关于这个用户的绑定表，所以不会生成MAC地址表项。那么当接口收到数据之后，发现源MAC与静态绑定表项的MAC不匹配则会丢弃该报文。当然管理员可以手工配置这种类型的静态MAC表项，使其发送的报文可以正常转发</li>
+</ul>
+<h5 id="防止DHCP-Server服务拒绝攻击（饿死攻击）"><a href="#防止DHCP-Server服务拒绝攻击（饿死攻击）" class="headerlink" title="防止DHCP Server服务拒绝攻击（饿死攻击）"></a>防止DHCP Server服务拒绝攻击（饿死攻击）</h5><ul>
+<li>攻击原理：DHCP Server是根据DHCP报文中的CHADDR（Client Hardware Address）字段来识别确认不同的客户端，如果攻击者持续发送Request报文不断修改CHADDR字段申请IP地址，将会导致DHCP Server的地址池被耗尽，从而导致无法为正常用户提供IP地址</li>
+<li>解决方案：DHCP Snooping技术支持在端口下对DHCP Request报文的源MAC地址与CHADDR进行一致性检查：如果二者相同，则转发报文；如果二者不相同，则丢弃。如果要在某端口下实施源MAC地址与CHADDR的一致性检查，可以在该端口下使用命令dhcp snooping check dhcp-chaddr enable</li>
 </ul>
 
                 
@@ -340,7 +393,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" class="category-chain-item">网络运维</a>
+  <a href="/categories/%E7%BD%91%E7%BB%9C%E6%8A%80%E6%9C%AF/" class="category-chain-item">网络技术</a>
   
   
 
@@ -357,8 +410,6 @@
       
         <a href="/tags/Network/" class="print-no-link">#Network</a>
       
-        <a href="/tags/%E6%A1%88%E4%BE%8B/" class="print-no-link">#案例</a>
-      
     </div>
   
 </div>
@@ -369,8 +420,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>交换机lacp协商异常问题</div>
-      <div>http://example.com/2024/02/13/lacp协商异常/</div>
+      <div>DHCP学习总结</div>
+      <div>http://example.com/2024/02/13/DHCP学习总结/</div>
     </div>
     <div class="license-meta">
       
@@ -414,18 +465,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" title="DHCP学习总结">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">DHCP学习总结</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/11/GRE/" title="GRE">
-                        <span class="hidden-mobile">GRE</span>
+                      <a href="/2024/02/13/lacp%E5%8D%8F%E5%95%86%E5%BC%82%E5%B8%B8/" title="交换机lacp协商异常问题">
+                        <span class="hidden-mobile">交换机lacp协商异常问题</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
