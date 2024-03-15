@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>各主流厂商流统相关命令总结</title>
+    <link href="/2024/03/15/%E5%90%84%E4%B8%BB%E6%B5%81%E5%8E%82%E5%95%86%E6%B5%81%E7%BB%9F%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/"/>
+    <url>/2024/03/15/%E5%90%84%E4%B8%BB%E6%B5%81%E5%8E%82%E5%95%86%E6%B5%81%E7%BB%9F%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</url>
+    
+    <content type="html"><![CDATA[<p>一、锐捷</p><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">ip <span class="hljs-keyword">access</span>-list extended XXX    <br><br><span class="hljs-number">10</span> permit ip host x.x.x.x host x.x.x.x<br><span class="hljs-number">20</span> permit ip <span class="hljs-keyword">any</span> <span class="hljs-keyword">any</span><br><br><br><span class="hljs-type">Int</span> xxx<br>ip <span class="hljs-keyword">access</span>-<span class="hljs-keyword">group</span> XXX <span class="hljs-keyword">in</span>/<span class="hljs-keyword">out</span><br><br><br>ip <span class="hljs-keyword">access</span>-list counter XXX<br></code></pre></td></tr></table></figure><p>二、思科</p><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">ip access-list XXX<br><span class="hljs-number">10</span> permit icmp X.X.X.X/<span class="hljs-number">32</span> X.X.X.X/<span class="hljs-number">32</span><br><span class="hljs-number">20</span> permit ip any any<br>statistics per-entry<br><br><br><br><span class="hljs-keyword">interface</span> <span class="hljs-symbol">X</span><br><span class="hljs-symbol">ip</span> <span class="hljs-symbol">access</span> <span class="hljs-symbol">group</span> <span class="hljs-symbol">XX</span> <span class="hljs-symbol">in</span>/<span class="hljs-symbol">out</span><br></code></pre></td></tr></table></figure><p>三、华三</p><figure class="highlight tp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs tp">acl number <span class="hljs-keyword">X</span><br>  rule <span class="hljs-number">10</span> permit icmp source <span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span> <span class="hljs-number">0</span> destination <span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span>.<span class="hljs-keyword">X</span> <span class="hljs-number">0</span><br><br>traffic classifier <span class="hljs-keyword">Y</span><br>if-match acl <span class="hljs-keyword">X</span><br><br>traffic behavior <span class="hljs-keyword">Y</span><br>accounting packet<br><br>qos policy <span class="hljs-keyword">Y</span><br>classifier <span class="hljs-keyword">Y</span> behavior <span class="hljs-keyword">Y</span><br><br>interface XXX<br>qos apply policy <span class="hljs-keyword">Y</span> inbound/outbound<br></code></pre></td></tr></table></figure><p>四、华为</p><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">acl number X<br><span class="hljs-keyword">rule</span> <span class="hljs-number">5</span> permit udp destination X.X.X.X <span class="hljs-number">0</span> destination-port eq <span class="hljs-number">4791</span> source X.X.X.X <span class="hljs-number">0</span><br><br>traffic classifier c1 <span class="hljs-keyword">type</span> <span class="hljs-keyword">or</span><br><span class="hljs-keyword">if</span>-match acl <span class="hljs-number">3500</span><br><br><br>traffic behavior b1<br><span class="hljs-keyword">statistics</span> <span class="hljs-keyword">enable</span><br><br><br>traffic <span class="hljs-keyword">policy</span> p1<br>  classifier c1 behavior b1 precedence <span class="hljs-number">5</span><br><br><br><span class="hljs-type">int</span> Eth-TrunkX<br>traffic-<span class="hljs-keyword">policy</span> p1 outbound<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络技术</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Network</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>DHCP学习总结</title>
     <link href="/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
     <url>/2024/02/13/DHCP%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</url>
